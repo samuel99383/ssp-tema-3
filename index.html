@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Test UP2 – Protecciones eléctricas y seguridad</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 0; }
+    header { padding: 18px 16px; border-bottom: 1px solid rgba(127,127,127,.35); }
+    main { max-width: 980px; margin: 0 auto; padding: 16px; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .btn { cursor: pointer; border: 1px solid rgba(127,127,127,.45); background: transparent; padding: 10px 12px; border-radius: 10px; }
+    .btn:hover { filter: brightness(1.06); }
+    .pill { padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35); }
+    .muted { opacity: .75; }
+    .card { border: 1px solid rgba(127,127,127,.35); border-radius: 16px; padding: 14px; margin: 12px 0; }
+    .q-title { font-weight: 700; margin-bottom: 10px; }
+    .opts { display: grid; gap: 8px; }
+    label.opt {
+      display: flex; gap: 10px; align-items: flex-start;
+      border: 1px solid rgba(127,127,127,.28);
+      padding: 10px 10px; border-radius: 12px;
+      cursor: pointer;
+    }
+    label.opt:hover { filter: brightness(1.05); }
+    input[type="radio"] { margin-top: 2px; }
+    .result { margin-top: 10px; font-weight: 700; }
+    .ok { color: #1a7f37; }
+    .bad { color: #d1242f; }
+    .explain { margin-top: 6px; font-size: .95rem; opacity: .9; }
+    .topbar { display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; }
+    .progress { height: 10px; background: rgba(127,127,127,.25); border-radius: 999px; overflow: hidden; width: 240px; }
+    .progress > div { height: 100%; background: rgba(64, 128, 255, .85); width: 0%; }
+    footer { padding: 18px 16px; border-top: 1px solid rgba(127,127,127,.35); opacity: .8; }
+    .small { font-size: .9rem; }
+    .hide { display: none; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <div style="font-weight:800;font-size:1.1rem;">Test UP2 – Protecciones eléctricas y seguridad</div>
+      <div class="muted small">Responde y verás al instante aciertos/errores. Puedes mezclar preguntas.</div>
+    </div>
+    <div class="row">
+      <span class="pill" id="scorePill">Aciertos: 0/35</span>
+      <span class="pill" id="gradePill">Nota: 0.00/10</span>
+      <div class="progress" title="Progreso"><div id="progBar"></div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="row" style="margin: 10px 0 18px;">
+    <button class="btn" id="shuffleBtn">Mezclar preguntas</button>
+    <button class="btn" id="resetBtn">Reiniciar</button>
+    <button class="btn" id="showAllBtn">Mostrar corrección de todo</button>
+    <span class="muted small">Tip: si activas “Mostrar corrección”, te marca todo aunque no lo hayas respondido.</span>
+  </div>
+
+  <div id="quiz"></div>
+
+  <div class="card" id="summaryCard">
+    <div style="font-weight:800;">Resumen</div>
+    <div class="muted" id="summaryText">Empieza respondiendo preguntas arriba.</div>
+  </div>
+</main>
+
+<footer class="small">
+  Hecho para GitHub Pages. No guarda datos: todo funciona en tu navegador.
+</footer>
+
+<script>
+  // ====== PREGUNTAS ======
+  const QUESTIONS = [
+  { id:"P1",  q:"Las protecciones eléctricas buscan prevenir daños ante condiciones anormales como:", opts:{A:"Solo sobretensiones",B:"Solo descargas atmosféricas",C:"Sobrecargas, cortocircuitos, fallas a tierra y sobretensiones",D:"Únicamente contactos directos"}, ans:"C"},
+  { id:"P2",  q:"Una sobrecarga se caracteriza por:", opts:{A:"Exceso de corriente por demanda de un receptor durante segundos hasta horas",B:"Contacto accidental entre dos puntos de distinto potencial",C:"Aumento de tensión por maniobras en red",D:"Duración de pocos milisegundos y corrientes miles de veces In"}, ans:"A"},
+  { id:"P3",  q:"Un cortocircuito es:", opts:{A:"Exceso de corriente por demanda normal del receptor",B:"Una fuga a tierra por armónicos",C:"Un aumento de tensión superior al 10% durante más de 1 s",D:"Contacto accidental entre dos puntos de diferente potencial"}, ans:"D"},
+  { id:"P4",  q:"Un choque eléctrico por contacto directo es:", opts:{A:"Una sobreintensidad por demanda del receptor",B:"Contacto con una parte en tensión de la instalación",C:"Aumento de tensión por rayo",D:"Contacto con una masa conductora en tensión por fallo de aislamiento"}, ans:"B"},
+  { id:"P5",  q:"El fusible se funde porque:", opts:{A:"La corriente excede lo permitido y el elemento de fusión se calienta y se funde",B:"Detecta diferencia entre corriente de entrada y salida",C:"Se enfría el material de relleno",D:"Un varistor aumenta su impedancia"}, ans:"A"},
+  { id:"P6",  q:"El tiempo total de actuación de un fusible se expresa como:", opts:{A:"tt = Icn × Un",B:"tt = ta − tp",C:"tt = In / Un",D:"tt = tp + ta"}, ans:"D"},
+  { id:"P7",  q:"La tensión asignada (Un) de un fusible debe ser:", opts:{A:"Siempre 230 V",B:"Menor que la tensión de la aplicación",C:"Igual o mayor que la tensión de la aplicación",D:"Igual a la corriente nominal"}, ans:"C"},
+  { id:"P8",  q:"El poder de corte de un fusible debe ser:", opts:{A:"Igual o mayor que la intensidad de cortocircuito prevista",B:"Menor que la intensidad prevista de cortocircuito",C:"Independiente de la instalación",D:"Igual al calibre del receptor"}, ans:"A"},
+  { id:"P9",  q:"En la designación de fusibles, la primera letra g significa:", opts:{A:"Motores",B:"Solo cortocircuitos",C:"Semiconductores",D:"Uso general (sobrecargas y cortocircuitos)"}, ans:"D"},
+  { id:"P10", q:"Un fusible de uso parcial (por ejemplo aM o aR) se usa exclusivamente para:", opts:{A:"Cortocircuitos",B:"Sobretensiones permanentes",C:"Sobrecargas",D:"Contactos indirectos"}, ans:"A"},
+  { id:"P11", q:"Los fusibles NH (de cuchilla) suelen requerir para manipularse:", opts:{A:"Alicates universales",B:"Llave fija",C:"Maneta extractora (a veces con manguito aislante)",D:"Destornillador plano"}, ans:"C"},
+  { id:"P12", q:"Un seccionador portafusibles:", opts:{A:"Funciona como diferencial",B:"Solo se usa en CC",C:"Permite corte en carga con total seguridad siempre",D:"No está diseñado para cortar en carga (con consumidores conectados)"}, ans:"D"},
+  { id:"P13", q:"Una ventaja del magnetotérmico frente al fusible es:", opts:{A:"No hay que sustituirlo tras disparar",B:"No tiene mecanismo térmico",C:"Solo funciona en CC",D:"No dispara por cortocircuito"}, ans:"A"},
+  { id:"P14", q:"En un magnetotérmico, el mecanismo magnético actúa principalmente ante:", opts:{A:"Fugas a tierra",B:"Sobretensiones permanentes",C:"Cortocircuitos",D:"Sobrecargas"}, ans:"C"},
+  { id:"P15", q:"En un magnetotérmico, el bimetal corresponde al:", opts:{A:"Varistor",B:"Mecanismo magnético",C:"Núcleo toroidal del diferencial",D:"Mecanismo térmico"}, ans:"D"},
+  { id:"P16", q:"En curva B, el disparo magnético IM vale aproximadamente:", opts:{A:"10 a 20 In",B:"3 a 5 In",C:"1 a 2 In",D:"5 a 10 In"}, ans:"B"},
+  { id:"P17", q:"La curva D se recomienda cuando:", opts:{A:"Se prevén transitorios como arranque de motores",B:"No hay transitorios",C:"Solo para semiconductores",D:"Hay cargas domésticas típicas"}, ans:"A"},
+  { id:"P18", q:"Un interruptor diferencial protege principalmente frente a:", opts:{A:"Sobrecargas del motor",B:"Sobretensiones permanentes por rotura de neutro",C:"Contactos directos por sobreintensidad",D:"Derivaciones por faltas de aislamiento hacia tierra/masa (protección de personas)"}, ans:"D"},
+  { id:"P19", q:"El diferencial actúa cuando:", opts:{A:"La tensión sube un 10% durante más de 1 s",B:"La corriente de salida es mayor que la de entrada",C:"La corriente de retorno es menor que la entrante (existe fuga/derivación)",D:"Se supera el poder de corte del magnetotérmico"}, ans:"C"},
+  { id:"P20", q:"El diferencial tipo AC se usa en general cuando:", opts:{A:"Los receptores no deforman la onda senoidal de 50 Hz",B:"Es obligatorio para recarga de vehículo eléctrico",C:"La carga deforma la onda (rectificadores)",D:"Son instalaciones con variadores trifásicos"}, ans:"A"},
+  { id:"P21", q:"El diferencial tipo A es el obligatorio (según el documento) para:", opts:{A:"Protección general de cables (gG)",B:"Infraestructuras de recarga de vehículos eléctricos e instalaciones fotovoltaicas",C:"Líneas ferroviarias en CC",D:"Instalaciones de alumbrado público"}, ans:"B"},
+  { id:"P22", q:"El diferencial tipo B se utiliza, por ejemplo:", opts:{A:"Solo para no disparar nunca",B:"Solo en viviendas sin electrónica",C:"Solo para falsos positivos por armónicos",D:"En recargas de VE tipo 3 y variadores trifásicos (p. ej. ascensores)"}, ans:"D"},
+  { id:"P23", q:"Un limitador de sobretensiones deriva a tierra las ondas peligrosas gracias al:", opts:{A:"Contactor de potencia",B:"Bimetal",C:"Varistor (comportamiento semiconductor)",D:"Relé de mínima tensión"}, ans:"C"},
+  { id:"P24", q:"Las sobretensiones permanentes se definen como:", opts:{A:"Fuga a tierra por armónicos",B:"Picos muy elevados de microsegundos",C:"Corriente miles de veces In durante ms",D:"Incrementos superiores al 10% con duración mayor a 1 s"}, ans:"D"},
+  { id:"P25", q:"La causa principal de la sobretensión permanente, según el documento, es:", opts:{A:"Rotura o desconexión del neutro",B:"Curva D del magnetotérmico",C:"Descargas atmosféricas",D:"Sobrecarga del motor"}, ans:"A"},
+  { id:"P26", q:"En categoría de sobretensión, la Categoría III incluye:", opts:{A:"Contadores y telemedida en el origen",B:"Electrodomésticos y herramientas portátiles",C:"Elementos de instalación fija (cuadros, interruptores, tomas, cables)",D:"Equipos informáticos muy sensibles"}, ans:"C"},
+  { id:"P27", q:"El relé térmico protege principalmente contra:", opts:{A:"Sobrecargas en motores (sobrecalentamiento por sobreintensidad)",B:"Diferencias de corriente entre ida y vuelta",C:"Cortocircuitos",D:"Sobretensiones transitorias"}, ans:"A"},
+  { id:"P28", q:"En el relé térmico, al disparar se produce:", opts:{A:"Solo apertura de contactos de potencia",B:"Cierre del NC 95-96 y apertura del NO 97-98",C:"Rearme inmediato sin enfriamiento",D:"Apertura del NC 95-96 y cierre del NO 97-98"}, ans:"D"},
+  { id:"P29", q:"Las clases de disparo IEC para relés térmicos incluyen, entre otras:", opts:{A:"Curva B, C y D",B:"Clase A, AC y B",C:"Clase 10, 20 y 30 (y clase 5 rápida)",D:"Clase 2, 4 y 6"}, ans:"C"},
+  { id:"P30", q:"En el guardamotor, a diferencia del relé térmico:", opts:{A:"Solo sirve para semiconductores",B:"Solo señaliza y nunca corta",C:"No puede regularse",D:"Efectúa la apertura del circuito con sus propios contactos (protección magnetotérmica)"}, ans:"D"},
+  { id:"P31", q:"La puesta a tierra sirve para:", opts:{A:"Aumentar la tensión de fallo",B:"Evitar que actúen las protecciones",C:"Limitar tensiones de fallo y disipar corrientes de defecto",D:"Sustituir el diferencial"}, ans:"C"},
+  { id:"P32", q:"En esquema TT, las masas de la instalación receptora están:", opts:{A:"Sin puesta a tierra",B:"Conectadas a la misma toma de tierra que el neutro de alimentación",C:"Conectadas al PEN (CPN) en todo el recorrido",D:"Conectadas a una toma de tierra separada de la de la alimentación"}, ans:"D"},
+  { id:"P33", q:"En esquema TN-C, una característica clave es:", opts:{A:"Neutro y protección combinados en un solo conductor",B:"Neutro y protección separados siempre",C:"Es obligatorio usar diferencial siempre",D:"No existe neutro"}, ans:"A"},
+  { id:"P34", q:"En esquema IT, se recomienda:", opts:{A:"Distribuir siempre el neutro",B:"Usar únicamente fusibles, sin magnetotérmicos",C:"No distribuir el neutro y limitar la longitud por efecto capacitivo",D:"Conectar el neutro directamente a tierra"}, ans:"C"},
+  { id:"P35", q:"En jerarquía preventiva, el orden correcto es:", opts:{A:"Señalizar → EPI → eliminar riesgo",B:"Protección individual → eliminar riesgo → colectiva",C:"EPI → protección colectiva → eliminar riesgo",D:"Eliminar riesgo → protección colectiva → protección individual (EPI)"}, ans:"D"},
+];
+
+  // ====== LÓGICA ======
+  let order = [...QUESTIONS.keys()];
+  let answers = {};   // {id: "A"|"B"|"C"|"D"}
+  let showAll = false;
+
+  const quizEl = document.getElementById("quiz");
+  const scorePill = document.getElementById("scorePill");
+  const gradePill = document.getElementById("gradePill");
+  const summaryText = document.getElementById("summaryText");
+  const progBar = document.getElementById("progBar");
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  function calc() {
+    const total = QUESTIONS.length;
+    let answered = 0;
+    let correct = 0;
+
+    for (const q of QUESTIONS) {
+      const a = answers[q.id];
+      if (a) {
+        answered++;
+        if (a === q.ans) correct++;
+      } else if (showAll) {
+        // no answer, doesn't count as correct
+      }
+    }
+    const grade = total ? (correct / total) * 10 : 0;
+    scorePill.textContent = `Aciertos: ${correct}/${total}`;
+    gradePill.textContent = `Nota: ${grade.toFixed(2)}/10`;
+    progBar.style.width = `${(answered/total)*100}%`;
+
+    summaryText.textContent = answered === 0
+      ? "Empieza respondiendo preguntas arriba."
+      : `Has respondido ${answered}/${total}. Aciertos: ${correct}. Nota: ${grade.toFixed(2)}/10.`;
+  }
+
+  function render() {
+    quizEl.innerHTML = "";
+
+    order.forEach((idx, pos) => {
+      const q = QUESTIONS[idx];
+      const card = document.createElement("div");
+      card.className = "card";
+      card.id = `card-${q.id}`;
+
+      const title = document.createElement("div");
+      title.className = "q-title";
+      title.textContent = `${pos + 1}. (${q.id}) ${q.q}`;
+      card.appendChild(title);
+
+      const opts = document.createElement("div");
+      opts.className = "opts";
+
+      ["A","B","C","D"].forEach(letter => {
+        const lab = document.createElement("label");
+        lab.className = "opt";
+        const inp = document.createElement("input");
+        inp.type = "radio";
+        inp.name = `q-${q.id}`;
+        inp.value = letter;
+        inp.checked = answers[q.id] === letter;
+
+        inp.addEventListener("change", () => {
+          answers[q.id] = letter;
+          updateCardFeedback(q.id);
+          calc();
+        });
+
+        const span = document.createElement("div");
+        span.innerHTML = `<strong>${letter})</strong> ${q.opts[letter]}`;
+
+        lab.appendChild(inp);
+        lab.appendChild(span);
+        opts.appendChild(lab);
+      });
+
+      card.appendChild(opts);
+
+      const res = document.createElement("div");
+      res.className = "result hide";
+      res.id = `res-${q.id}`;
+      card.appendChild(res);
+
+      const exp = document.createElement("div");
+      exp.className = "explain hide";
+      exp.id = `exp-${q.id}`;
+      card.appendChild(exp);
+
+      quizEl.appendChild(card);
+
+      updateCardFeedback(q.id);
+    });
+
+    calc();
+  }
+
+  function updateCardFeedback(qid) {
+    const q = QUESTIONS.find(x => x.id === qid);
+    const chosen = answers[qid];
+    const resEl = document.getElementById(`res-${qid}`);
+    const expEl = document.getElementById(`exp-${qid}`);
+
+    const shouldShow = showAll || !!chosen;
+    if (!shouldShow) {
+      resEl.classList.add("hide");
+      expEl.classList.add("hide");
+      return;
+    }
+
+    resEl.classList.remove("hide");
+    expEl.classList.remove("hide");
+
+    if (!chosen) {
+      resEl.textContent = "Sin responder";
+      resEl.className = "result bad";
+      expEl.textContent = `Correcta: ${q.ans}) ${q.opts[q.ans]}`;
+      return;
+    }
+
+    if (chosen === q.ans) {
+      resEl.textContent = "✅ Correcta";
+      resEl.className = "result ok";
+      expEl.textContent = "";
+      expEl.classList.add("hide");
+    } else {
+      resEl.textContent = "❌ Incorrecta";
+      resEl.className = "result bad";
+      expEl.textContent = `Correcta: ${q.ans}) ${q.opts[q.ans]}`;
+      expEl.classList.remove("hide");
+    }
+  }
+
+  document.getElementById("shuffleBtn").addEventListener("click", () => {
+    order = [...QUESTIONS.keys()];
+    shuffle(order);
+    render();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    answers = {};
+    showAll = false;
+    document.getElementById("showAllBtn").textContent = "Mostrar corrección de todo";
+    order = [...QUESTIONS.keys()];
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+
+  document.getElementById("showAllBtn").addEventListener("click", (e) => {
+    showAll = !showAll;
+    e.target.textContent = showAll ? "Ocultar corrección automática" : "Mostrar corrección de todo";
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
