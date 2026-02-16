@@ -1,0 +1,269 @@
+::1 Definición máquina eléctrica::
+Una máquina eléctrica puede:
+{
+=Transformar energía eléctrica en mecánica, mecánica en eléctrica o modificar tensión
+~Solo transformar energía eléctrica en calor
+~Almacenar energía eléctrica
+~Generar únicamente energía térmica
+}
+
+::2 Clasificación general::
+Las máquinas eléctricas se dividen en:
+{
+=Rotativas y estáticas
+~CA y CC
+~Motores y alternadores
+~Síncronas y universales
+}
+
+::3 Parte fija del motor::
+La parte fija del motor se denomina:
+{
+=Estátor
+~Rotor
+~Eje
+~Inducido
+}
+
+::4 Parte móvil::
+La parte móvil del motor es:
+{
+=Rotor
+~Estátor
+~Carcasa
+~Núcleo
+}
+
+::5 Par motor::
+El par motor es:
+{
+=La capacidad de arrastre del motor
+~La potencia eléctrica absorbida
+~La velocidad angular
+~La corriente nominal
+}
+
+::6 Rendimiento::
+El rendimiento de un motor es:
+{
+=La relación entre potencia mecánica y eléctrica
+~La potencia consumida
+~La corriente nominal
+~El par máximo
+}
+
+::7 Motor CC serie::
+Un motor CC serie:
+{
+=No debe funcionar en vacío
+~Mantiene velocidad constante
+~Tiene bajo par de arranque
+~No tiene colector
+}
+
+::8 Motor CC shunt::
+El motor CC derivación se caracteriza por:
+{
+=Mantener velocidad relativamente constante
+~Embalarse en vacío
+~No tener devanado de excitación
+~Tener alto deslizamiento
+}
+
+::9 Motor CC compound::
+El motor compound combina:
+{
+=Serie y derivación
+~Shunt y síncrono
+~Brushless y paso a paso
+~Jaula y anillos
+}
+
+::10 Motor brushless::
+El motor brushless:
+{
+=No tiene escobillas
+~Tiene colector de delgas
+~Necesita anillos rozantes
+~Funciona solo en CC sin electrónica
+}
+
+::11 Motor paso a paso::
+Un motor paso a paso se usa cuando se necesita:
+{
+=Control preciso de posición
+~Gran velocidad constante
+~Alta potencia industrial
+~Funcionamiento sin controlador
+}
+
+::12 Servomotor::
+El servomotor funciona normalmente en:
+{
+=Lazo cerrado con encoder
+~Lazo abierto
+~Modo manual
+~Sin electrónica
+}
+
+::13 Motor síncrono::
+Un motor síncrono:
+{
+=Gira a velocidad igual a la de sincronismo
+~Tiene deslizamiento elevado
+~No necesita alimentación
+~Funciona solo en CC
+}
+
+::14 Motor asíncrono::
+El motor asíncrono:
+{
+=Gira ligeramente por debajo de la velocidad síncrona
+~Gira exactamente a sincronismo
+~No tiene rotor
+~Funciona sin campo magnético
+}
+
+::15 Velocidad síncrona::
+La velocidad síncrona depende de:
+{
+=Frecuencia y número de polos
+~Potencia del motor
+~Corriente absorbida
+~Par resistente
+}
+
+::16 Deslizamiento::
+El deslizamiento es:
+{
+=La diferencia entre velocidad síncrona y real del rotor
+~La corriente de arranque
+~La potencia perdida
+~La velocidad nominal
+}
+
+::17 Jaula de ardilla::
+El motor de jaula de ardilla se caracteriza por:
+{
+=Ser robusto y de bajo mantenimiento
+~Tener escobillas
+~Tener colector
+~No tener rotor
+}
+
+::18 Anillos rozantes::
+El motor de anillos rozantes:
+{
+=Permite reducir corriente de arranque con resistencias externas
+~No necesita mantenimiento
+~No tiene escobillas
+~No tiene rotor bobinado
+}
+
+::19 Motor monofásico condensador::
+El devanado auxiliar en motores monofásicos sirve para:
+{
+=Generar par de arranque
+~Reducir potencia
+~Eliminar deslizamiento
+~Aumentar polos
+}
+
+::20 Polos sombreados::
+El motor de polos sombreados se caracteriza por:
+{
+=Bajo coste y baja potencia
+~Alta eficiencia industrial
+~Gran par de arranque
+~Uso en alta potencia
+}
+
+::21 Conexión Steinmetz::
+La conexión Steinmetz permite:
+{
+=Usar un motor trifásico en red monofásica
+~Convertir CC en CA
+~Eliminar el deslizamiento
+~Duplicar potencia
+}
+
+::22 Motor universal::
+El motor universal:
+{
+=Puede funcionar en CA y CC
+~Solo funciona en CC
+~No tiene escobillas
+~No tiene colector
+}
+
+::23 Transformador::
+Un transformador funciona por:
+{
+=Inducción electromagnética
+~Rozamiento mecánico
+~Conmutación
+~Deslizamiento
+}
+
+::24 Transformador en CC::
+En corriente continua un transformador:
+{
+=No funciona salvo en el instante inicial
+~Funciona normalmente
+~Aumenta la tensión
+~Reduce corriente
+}
+
+::25 Relación de transformación::
+En un transformador ideal:
+{
+=V1/V2 = N1/N2
+~V1 = V2
+~I1 = I2
+~N1 = N2
+}
+
+::26 Potencia transformador::
+La capacidad de un transformador se expresa en:
+{
+=VA o kVA
+~W exclusivamente
+~Hz
+~RPM
+}
+
+::27 Pérdidas en vacío::
+Las pérdidas en vacío se deben a:
+{
+=Histéresis y corrientes de Foucault
+~Efecto Joule
+~Rozamiento
+~Escobillas
+}
+
+::28 Pérdidas en carga::
+Las pérdidas en carga son principalmente:
+{
+=I²R en los devanados
+~Histéresis
+~Foucault
+~Dieléctricas únicamente
+}
+
+::29 Motor Dahlander::
+La conexión Dahlander permite:
+{
+=Cambiar número de polos y velocidad 1:2
+~Cambiar tensión
+~Eliminar deslizamiento
+~Convertir CA en CC
+}
+
+::30 Campo giratorio::
+En un motor trifásico el campo giratorio se genera por:
+{
+=Corrientes trifásicas desfasadas 120°
+~Corriente continua
+~Un solo devanado
+~Resistencia externa
+}
